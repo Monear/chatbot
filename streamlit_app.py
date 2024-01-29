@@ -46,11 +46,11 @@ if "assistant" not in st.session_state:
     )
 
 
-# Display a welcome message at the start of the chat
-if "welcome_message_displayed" not in st.session_state:
-    st.session_state.welcome_message_displayed = True
-    with st.chat_message('assistant'):
-        st.write("Hello! How can I assist you today?")
+# # Display a welcome message at the start of the chat
+# if "welcome_message_displayed" not in st.session_state:
+#     st.session_state.welcome_message_displayed = True
+#     with st.chat_message('assistant'):
+#         st.write("Hello! How can I assist you today?")
 
 # Display chat messages
 elif hasattr(st.session_state.run, 'status') and st.session_state.run.status == "completed":
