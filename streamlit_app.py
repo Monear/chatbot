@@ -27,7 +27,16 @@ if "retry_error" not in st.session_state:
     st.session_state.retry_error = 0
 
 # Set up the page
-st.set_page_config(page_title="Enter title here")
+st.set_page_config(page_title="Chatbot")
+
+# Hide the menu and the footer
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # Initialize OpenAI assistant
 if "assistant" not in st.session_state:
@@ -36,6 +45,12 @@ if "assistant" not in st.session_state:
     st.session_state.thread = client.beta.threads.create(
         metadata={'session_id': st.session_state.session_id}
     )
+
+# Display a welcome message at the start of the chat
+if "welcome_message_displayed" not in st.session_state:
+    st.session_state.welcome_message_displayed = True
+    with st.chat_message('assistant'):
+        st.write("Hello! How can I assist you today?")
 
 # Display chat messages
 elif hasattr(st.session_state.run, 'status') and st.session_state.run.status == "completed":
