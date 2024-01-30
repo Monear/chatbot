@@ -38,13 +38,17 @@ hide_streamlit_style = """
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
-# Connect to your MySQL database
-cnx = mysql.connector.connect(
-    host=st.secrets["DB_HOST"],
-    user=st.secrets["DB_USER"],
-    password=st.secrets["DB_PASS"],
-    database=st.secrets["DB_NAME"],
-)
+try:
+    # Connect to your MySQL database
+    cnx = mysql.connector.connect(
+        host=st.secrets["DB_HOST"],
+        user=st.secrets["DB_USER"],
+        password=st.secrets["DB_PASS"],
+        database=st.secrets["DB_NAME"],
+    )
+except mysql.connector.Error as err:
+    st.error(f"Error connecting to MySQL database: {err}")
+    st.stop()
 
 # Function to insert thread ID into the database
 def insert_thread_id(thread_id):
