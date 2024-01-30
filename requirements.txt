@@ -1,3 +1,4 @@
 openai
+mysql.connector
 streamlit
 pandas
