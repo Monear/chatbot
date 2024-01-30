@@ -1,4 +1,5 @@
 # Importing required packages
+import mysql.connector
 import streamlit as st
 import openai
 import uuid
@@ -37,6 +38,24 @@ hide_streamlit_style = """
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
+# Connect to your MySQL database
+cnx = mysql.connector.connect(
+    host=st.secrets["DB_HOST"],
+    user=st.secrets["DB_USER"],
+    password=st.secrets["DB_PASS"],
+    database=st.secrets["DB_NAME"],
+)
+
+# Function to insert thread ID into the database
+def insert_thread_id(thread_id):
+    cursor = cnx.cursor()
+    cursor.execute(
+        "INSERT INTO threads (thread_id) VALUES (%s)",
+        (thread_id,),
+    )
+    cnx.commit()
+    cursor.close()
+
 # Initialize OpenAI assistant
 if "assistant" not in st.session_state:
     openai.api_key = st.secrets["OPENAI_API_KEY"]
@@ -44,6 +63,9 @@ if "assistant" not in st.session_state:
     st.session_state.thread = client.beta.threads.create(
         metadata={'session_id': st.session_state.session_id}
     )
+
+    # Insert the new thread ID into the database
+    insert_thread_id(st.session_state.thread.id)
 
 
 # # Display a welcome message at the start of the chat
